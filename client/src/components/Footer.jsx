@@ -1,7 +1,7 @@
 const Footer = () => (
-    <footer className="bg-[#1f1f1f] text-gray-500 text-center py-4 text-sm">
-      © {new Date().getFullYear()} Job Tracker — зроблено з кавою ☕
-    </footer>
-  );
-  
-  export default Footer;
+  <footer className="bg-gray-900 text-gray-400 text-center py-5 text-sm font-mono border-t border-gray-700 select-none shadow-inner">
+    © {new Date().getFullYear()} Job Tracker — зроблено з ☕
+  </footer>
+);
+
+export default Footer;

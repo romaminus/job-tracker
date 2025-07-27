@@ -9,21 +9,53 @@ const EditModal = () => {
     updateApplication,
   } = useAppStore();
 
-  const activeElement = applications.find((app) => app.id === activeApplicationId);
-  const [formData, setFormData] = useState(null);
+  const activeElement = applications.find(
+    (app) => app.id === activeApplicationId
+  );
 
-  const statusOptions = ['submitted', 'applied', 'interviewing', 'offer', 'rejected'];
+  const statusOptions = [
+    "applied",
+    "responded",
+    "interviewing",
+    "offer",
+    "rejected",
+  ];
+  const interviewResultOptions = ["pending", "done", "failed"];
+
+  const [formData, setFormData] = useState(null);
 
   useEffect(() => {
     if (activeElement) {
-      setFormData({ ...activeElement }); // копія, не мутація
+      setFormData({
+        ...activeElement,
+        interview: { ...activeElement.interview },
+      });
     }
   }, [activeElement]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name.startsWith("interview.")) {
+      const interviewField = name.split(".")[1];
+      setFormData((prevData) => ({
+        ...prevData,
+        interview: {
+          ...prevData.interview,
+          [interviewField]: value,
+        },
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData) {
-      updateApplication(formData.id, formData); // зберігаємо
+      updateApplication(formData.id, formData);
       onClose();
     }
   };
@@ -32,68 +64,209 @@ const EditModal = () => {
     setIsEditModalOpen(false);
   };
 
-  if (!formData) return null; // не показувати до готовності
+  if (!formData) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-xl text-black w-full max-w-md shadow-lg">
-        <h2 className="text-xl font-bold mb-4">Edit Application</h2>
-        <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
-          {[
-            { id: 'company', label: 'Company' },
-            { id: 'position', label: 'Position' },
-            { id: 'appliedAt', label: 'Applied At', type: 'date' },
-            { id: 'interviewDate', label: 'Interview Date', type: 'date' },
-            { id: 'source', label: 'Source' },
-          ].map(({ id, label, type = 'text' }) => (
-            <div key={id} className="flex flex-col gap-1">
-              <label htmlFor={id} className="text-sm text-gray-700">{label}</label>
-              <input
-                id={id}
-                type={type}
-                className="border border-gray-300 rounded-md p-2"
-                value={formData[id] || ''}
-                onChange={(e) => setFormData({ ...formData, [id]: e.target.value })}
-              />
-            </div>
-          ))}
+    <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-start justify-center z-50 p-4 overflow-y-auto">
+      <div className="bg-gray-800 p-6 rounded-xl text-gray-100 w-full max-w-lg shadow-2xl border border-gray-700 relative my-8 font-sans">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-3xl font-bold cursor-pointer select-none"
+          aria-label="Close modal"
+          title="Ні-ні, не жартуй — закривай!"
+        >
+          &times;
+        </button>
 
-          <div className="flex flex-col gap-1">
-            <label htmlFor="status" className="text-sm text-gray-700">Status</label>
+        <h2 className="text-3xl font-extrabold text-center mb-6 tracking-wide drop-shadow-md text-teal-400">
+          🛠️ Редагуємо твою заявку — тримайся міцніше!
+        </h2>
+        <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+          <div>
+            <label
+              htmlFor="company"
+              className="block text-gray-300 text-md font-semibold mb-1"
+            >
+              Компанія
+            </label>
+            <input
+              id="company"
+              name="company"
+              type="text"
+              className="w-full p-3 bg-gray-700 border border-gray-600 rounded-md text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
+              value={formData.company || ""}
+              onChange={handleChange}
+              placeholder="Назва компанії (твоєї майбутньої фортеці)"
+              required
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="position"
+              className="block text-gray-300 text-md font-semibold mb-1"
+            >
+              Позиція
+            </label>
+            <input
+              id="position"
+              name="position"
+              type="text"
+              className="w-full p-3 bg-gray-700 border border-gray-600 rounded-md text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
+              value={formData.position || ""}
+              onChange={handleChange}
+              placeholder="Яку роль хочеш відіграти?"
+              required
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="status"
+              className="block text-gray-300 text-md font-semibold mb-1"
+            >
+              Статус заявки
+            </label>
             <select
               id="status"
-              className="border border-gray-300 rounded-md p-2"
-              value={formData.status}
-              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+              name="status"
+              className="w-full p-3 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none transition"
+              value={formData.status || statusOptions[0]}
+              onChange={handleChange}
             >
               {statusOptions.map((status) => (
                 <option key={status} value={status}>
-                  {status.charAt(0).toUpperCase() + status.slice(1)}
+                  {status.charAt(0).toUpperCase() +
+                    status.slice(1).replace("_", " ")}
                 </option>
               ))}
             </select>
           </div>
 
-          <div className="flex flex-col gap-1">
-            <label htmlFor="notes" className="text-sm text-gray-700">Notes</label>
-            <textarea
-              id="notes"
-              className="border border-gray-300 rounded-md p-2"
-              value={formData.notes || ''}
-              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+          <div>
+            <label
+              htmlFor="appliedAt"
+              className="block text-gray-300 text-md font-semibold mb-1"
+            >
+              Дата подачі
+            </label>
+            <input
+              id="appliedAt"
+              name="appliedAt"
+              type="date"
+              className="w-full p-3 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              value={formData.appliedAt || ""}
+              onChange={handleChange}
+              required
             />
           </div>
 
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer">
-            Save
+          <div className="bg-gray-700 p-5 rounded-lg border border-gray-600 shadow-inner">
+            <h3 className="text-xl font-bold mb-4 text-teal-400 drop-shadow-md">
+              🔎 Деталі інтерв'ю
+            </h3>
+
+            <div className="mb-4">
+              <label
+                htmlFor="interviewDate"
+                className="block text-gray-300 font-semibold mb-1"
+              >
+                Дата інтерв'ю
+              </label>
+              <input
+                id="interviewDate"
+                name="interview.date"
+                type="date"
+                className="w-full p-3 bg-gray-600 border border-gray-500 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                value={formData.interview.date || ""}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="interviewResult"
+                className="block text-gray-300 font-semibold mb-1"
+              >
+                Результат інтерв'ю
+              </label>
+              <select
+                id="interviewResult"
+                name="interview.result"
+                className="w-full p-3 bg-gray-600 border border-gray-500 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none"
+                value={formData.interview.result || interviewResultOptions[0]}
+                onChange={handleChange}
+              >
+                {interviewResultOptions.map((result) => (
+                  <option key={result} value={result}>
+                    {result.charAt(0).toUpperCase() +
+                      result.slice(1).replace("_", " ")}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="interviewNotes"
+                className="block text-gray-300 font-semibold mb-1"
+              >
+                Нотатки по інтерв'ю
+              </label>
+              <textarea
+                id="interviewNotes"
+                name="interview.notes"
+                className="w-full p-3 bg-gray-600 border border-gray-500 rounded-md text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 min-h-[80px]"
+                value={formData.interview.notes || ""}
+                onChange={handleChange}
+                placeholder="Що сказав/запитав? Що запам'ятав?"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              htmlFor="source"
+              className="block text-gray-300 text-md font-semibold mb-1"
+            >
+              Джерело (Звідки отримав кейс)
+            </label>
+            <input
+              id="source"
+              name="source"
+              type="text"
+              className="w-full p-3 bg-gray-700 border border-gray-600 rounded-md text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              value={formData.source || ""}
+              onChange={handleChange}
+              placeholder="Звідки дізналися про вакансію?"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="notes"
+              className="block text-gray-300 text-md font-semibold mb-1"
+            >
+              Загальні нотатки
+            </label>
+            <textarea
+              id="notes"
+              name="notes"
+              className="w-full p-3 bg-gray-700 border border-gray-600 rounded-md text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 min-h-[100px]"
+              value={formData.notes || ""}
+              onChange={handleChange}
+              placeholder="Тут можна все, що завгодно..."
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-teal-600 text-gray-100 font-extrabold py-3 rounded-lg hover:bg-teal-500 transition duration-300"
+            title="Зберегти всі шаленства"
+          >
+            Зберегти зміни!
           </button>
         </form>
-        <button
-          onClick={onClose}
-          className="mt-4 bg-red-500 text-white px-4 py-2 rounded w-full cursor-pointer"
-        >
-          Close
-        </button>
       </div>
     </div>
   );

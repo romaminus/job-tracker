@@ -1,78 +1,112 @@
-import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-
-// 🔧 Мокові дані (тимчасово, потім заміниш на фетч або пропс)
-const mockApplications = [
-  {
-    id: 'app_001',
-    company: 'Google',
-    position: 'Frontend Developer',
-    appliedAt: '2025-07-15',
-    source: 'LinkedIn',
-    status: 'interviewing',
-    notes: 'Швидко відповіли, дали тестове',
-    interview: {
-      date: '2025-07-20',
-      result: 'pending',
-      notes: 'Очікую на фідбек',
-    },
-  },
-  // можна додати ще
-];
+import useAppStore from "../store/useAppStore";
+import { useParams, useNavigate } from "react-router-dom";
+import EditModal from "../components/EditModal";
 
 const ApplicationPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const {
+    setIsEditModalOpen,
+    setActiveApplicationId,
+    applications,
+    isEditModalOpen,
+    deleteApplication,
+  } = useAppStore();
 
-  const application = mockApplications.find((a) => a.id === id);
+  const application = applications.find((a) => a.id === id);
+
+  const handleEdit = () => {
+    setIsEditModalOpen(true);
+    setActiveApplicationId(application.id);
+  };
+
+  const handleDelete = () => {
+    deleteApplication(application.id);
+    navigate("/");
+  };
 
   if (!application) {
     return (
-      <div className="text-center text-red-500 text-lg mt-10">
+      <div className="text-center text-red-400 text-lg mt-10">
         Заявку не знайдено.
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto bg-[#1f1f1f] p-6 rounded-xl shadow-xl text-white">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-serif text-gold">
+    <main
+      role="main"
+      className="max-w-3xl mx-auto p-6 rounded-xl border-gray-900 border-2 shadow-lg bg-gray-800 text-gray-100 hover:shadow-teal-500/30 transition-transform duration-200"
+    >
+      {isEditModalOpen && <EditModal />}
+
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold text-teal-400">
           {application.company} — {application.position}
         </h2>
         <button
-          onClick={() => navigate('/')}
-          className="text-sm text-gray-400 hover:underline"
+          type="button"
+          onClick={() => navigate("/")}
+          className="bg-gray-700 px-4 py-2 rounded-lg text-gray-200 hover:bg-teal-600 transition duration-300 ease-in-out"
         >
-          ⬅ Назад
+          Назад
         </button>
       </div>
 
-      <div className="space-y-2">
-        <p><span className="text-gray-400">📅 Дата подачі:</span> {application.appliedAt}</p>
-        <p><span className="text-gray-400">📍 Джерело:</span> {application.source}</p>
-        <p><span className="text-gray-400">📈 Статус:</span> <span className="text-yellow-400">{application.status}</span></p>
-        <p><span className="text-gray-400">📝 Нотатки:</span> {application.notes}</p>
-      </div>
+      <section className="space-y-3 text-gray-300">
+        <p>
+          <span className="font-medium text-gray-400">📅 Дата подачі:</span>{" "}
+          {application.appliedAt}
+        </p>
+        <p>
+          <span className="font-medium text-gray-400">📍 Джерело:</span>{" "}
+          {application.source}
+        </p>
+        <p>
+          <span className="font-medium text-gray-400">📈 Статус:</span>{" "}
+          <span className="text-teal-400 font-semibold">
+            {application.status}
+          </span>
+        </p>
+        <p>
+          <span className="font-medium text-gray-400">📝 Нотатки:</span>{" "}
+          {application.notes}
+        </p>
+      </section>
 
       {application.interview && (
-        <div className="mt-6 border-t border-gray-700 pt-4">
-          <h3 className="text-xl text-gold mb-2">🎤 Інтерв’ю</h3>
-          <p><span className="text-gray-400">Дата:</span> {application.interview.date}</p>
-          <p><span className="text-gray-400">Результат:</span> {application.interview.result}</p>
-          <p><span className="text-gray-400">Нотатки:</span> {application.interview.notes}</p>
-        </div>
+        <section className="mt-8 border-t border-gray-700 pt-4 text-gray-300">
+          <h3 className="text-xl text-teal-400 mb-3">🎤 Інтерв’ю</h3>
+          <p>
+            <span className="font-medium text-gray-400">Дата:</span>{" "}
+            {application.interview.date}
+          </p>
+          <p>
+            <span className="font-medium text-gray-400">Результат:</span>{" "}
+            {application.interview.result}
+          </p>
+          <p>
+            <span className="font-medium text-gray-400">Нотатки:</span>{" "}
+            {application.interview.notes}
+          </p>
+        </section>
       )}
 
-      <div className="mt-6">
+      <footer className="mt-8 flex justify-end gap-3">
         <button
-          onClick={() => alert('В майбутньому: форма редагування')}
-          className="bg-gold text-black px-4 py-2 rounded-xl hover:bg-yellow-500 transition"
+          onClick={handleEdit}
+          className="bg-teal-600 px-4 py-2 rounded-lg text-gray-100 hover:bg-teal-500 transition duration-300 ease-in-out"
         >
-          ✏️ Редагувати
+          Редагувати
         </button>
-      </div>
-    </div>
+        <button
+          onClick={handleDelete}
+          className="bg-red-600 px-4 py-2 rounded-lg text-gray-100 hover:bg-red-500 transition duration-300 ease-in-out"
+        >
+          Видалити
+        </button>
+      </footer>
+    </main>
   );
 };
 

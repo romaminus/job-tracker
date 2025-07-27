@@ -1,39 +1,41 @@
-import { useRouteError, useNavigate } from 'react-router-dom';
-import errorImage from '../img/errorImage.webp';
+import { useRouteError, useNavigate } from "react-router-dom";
+import errorImage from "../img/hq720.jpg"; // Переконайтеся, що цей шлях до зображення вірний
 
 const ErrorPage = () => {
   const navigate = useNavigate();
   const error = useRouteError();
-  console.error('Routing error:', error);
+  console.error("Routing error:", error);
 
   return (
-    <div className="min-h-screen bg-[#362c28] text-white flex items-center justify-center px-6 py-10">
-      <div className="flex flex-col items-center text-center max-w-xl space-y-6">
+    <div className="min-h-screen bg-gray-950 text-gray-100 flex flex-col items-center justify-center px-6 py-10">
+      <div className="max-w-md text-center space-y-6">
         <img
           src={errorImage}
           alt="Oops"
-          className="max-w-[500px] rounded-lg shadow-2xl"
+          className="mx-auto max-w-[250px] rounded-full border-4 border-teal-500 shadow-xl"
         />
 
-        <h1 className="text-4xl md:text-5xl font-bold text-orange-400">
-          Well, that’s not supposed to be there...
+        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-teal-400">
+          Йой! здається, Мікі втратив керування...
         </h1>
 
-        <p className="text-lg text-gray-300">
-          Either you took a wrong turn, or someone’s been messing around with the routes again.
-          <br />
-          Let’s pretend we didn’t see this and get out before it gets proper ugly.
+        <p className="text-gray-300 text-lg">
+          Навіть у справжніх чемпіонів бувають нокдауни.
+          Але ми тут, щоб підняти його на ноги.
         </p>
 
-        <p className="text-sm text-red-400">
-          {error?.error?.message || 'Something went wrong.'}
+        <p className="text-sm text-red-400 bg-gray-800 bg-opacity-70 p-3 rounded-lg border border-red-500 font-mono">
+          "Ти ж знаєш, Мікі може загнати тебе в глухий кут, звідки не вибратися." <br />
+          <span className="font-semibold block mt-2">Помилка:</span>{" "}
+          {error?.error?.message || "Щось пішло не так, як ми очікували. Ну, буває."}
         </p>
 
         <button
-          onClick={() => navigate('/')}
-          className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg text-lg transition"
+          onClick={() => navigate("/")}
+          className="mt-6 bg-teal-600 hover:bg-teal-500 text-gray-100 font-semibold py-3 px-8 rounded-lg shadow-lg transition transform active:scale-98"
+          aria-label="Повернутися на головну"
         >
-          Take me back, before things get messy
+          Давай, Мікі! Повернися у ринг!
         </button>
       </div>
     </div>

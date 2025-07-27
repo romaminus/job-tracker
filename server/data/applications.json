@@ -1,0 +1,82 @@
+[
+  {
+    "id": "1721990400000",
+    "company": "Tech Innovators Inc.",
+    "position": "Senior Software Engineer",
+    "status": "interviewing",
+    "appliedAt": "2024-07-25",
+    "source": "LinkedIn",
+    "notes": "Пройшов перший раунд з HR. Чекаю на технічне інтерв'ю. Команда здалася дуже привітною.",
+    "interview": {
+      "date": "2024-07-30",
+      "result": "pending",
+      "notes": "Інтерв'ю з менеджером проекту. Обговорювали минулий досвід та командну роботу."
+    },
+    "createdAt": "2024-07-26T10:00:00.000Z",
+    "updatedAt": "2024-07-26T14:30:00.000Z"
+  },
+  {
+    "id": "1721990460000",
+    "company": "Global Solutions LLC",
+    "position": "Product Manager",
+    "status": "applied",
+    "appliedAt": "2024-07-20",
+    "source": "Djinni",
+    "notes": "Зацікавила вакансія, але не впевнений щодо відповідності всім вимогам.",
+    "interview": {
+      "date": "",
+      "result": "pending",
+      "notes": ""
+    },
+    "createdAt": "2024-07-26T10:01:00.000Z",
+    "updatedAt": "2024-07-26T10:01:00.000Z"
+  },
+  {
+    "id": "1753615174963",
+    "company": "PixHub",
+    "position": "Front-End Developer",
+    "status": "offer",
+    "interview": {
+      "date": "2025-07-01",
+      "result": "done",
+      "notes": ""
+    },
+    "appliedAt": "2025-07-01",
+    "source": "LinkedIn",
+    "notes": "Виконав і здав проект.",
+    "createdAt": "2025-07-27T11:19:53.250Z",
+    "updatedAt": "2025-07-27T11:41:24.851Z"
+  },
+  {
+    "id": "1753616507208",
+    "company": "Freelance",
+    "position": "Front-End Developer",
+    "status": "responded",
+    "interview": {
+      "date": "",
+      "result": "pending",
+      "notes": ""
+    },
+    "appliedAt": "2025-07-01",
+    "source": "Djinni",
+    "notes": "Вакансію закрито..(",
+    "createdAt": "2025-07-27T11:42:53.762Z",
+    "updatedAt": "2025-07-27T11:42:53.762Z"
+  },
+  {
+    "id": "1753616579640",
+    "company": "Revolut",
+    "position": "Front-End Developer",
+    "status": "rejected",
+    "interview": {
+      "date": "",
+      "result": "pending",
+      "notes": ""
+    },
+    "appliedAt": "2025-07-05",
+    "source": "DOU",
+    "notes": "Не достатньо досвіду. Вибір в сторону ьільш досвідченого кандидата",
+    "createdAt": "2025-07-27T11:44:23.103Z",
+    "updatedAt": "2025-07-27T11:44:23.103Z"
+  }
+]
